@@ -1,0 +1,89 @@
+# Processo: {{ processo }}
+# UF: {{ uf }}
+# Tipo Convenente: {{ tipo_convenente }}
+# Nome Convenente: {{ nome_convenente }}
+# Nome Executor: {{ nome_executor }}
+# Título Objeto: {{ titulo_objeto }}
+# Detalhamento Objeto: {{ detalhamento_objeto }}
+# Objetivo Principal: {{ objetivo_principal }}
+# Composição Objeto: {{ composicao_objeto }}
+# Tipo Intervenção: {{ tipo_intervencao }}
+# Tipo Obra: {{ tipo_obra }}
+# Meta Física: {{ meta_fisica }}
+# Unidade Medida: {{ unidade_medida }}
+# Novo PAC: {{ novo_pac }}
+# ID Novo PAC: {{ id_novo_pac }}
+# Modalidade: {{ modalidade }}
+# Normativo Principal: {{ normativo_principal }}
+# Regime Simplificado: {{ regime_simplificado }}
+# Número Instrumento: {{ numero_instrumento }}
+# SIAFI: {{ siafi }}
+# Número Proposta: {{ numero_proposta }}
+# Status Instrumento: {{ status_instrumento }}
+# Status Complementar: {{ status_complementar }}
+# Providências: {{ providencias }}
+# Data Previdências: {{ data_previdencias }}
+# Restrições: {{ restricoes }}
+# Resultados: {{ resultados }}
+# Estágio Objeto: {{ estagio_objeto }}
+# Execução Física: {{ execucao_fisica }}
+# Detalhamento Execução: {{ detalhamento_execucao }}
+# Motivo Paralisação: {{ motivo_paralisacao }}
+# Status Funcionalidade: {{ status_funcionalidade }}
+# Execução Adequada PT: {{ execucao_adequada_pt }}
+# Descrição Problemas: {{ descricao_problemas }}
+# Data Referência Execução: {{ data_referencia_execucao }}
+# Fonte Informação Execução: {{ fonte_informacao_execucao }}
+# Previsão Início: {{ previsao_inicio }}
+# Previsão Término: {{ previsao_termino }}
+# Início Objeto: {{ inicio_objeto }}
+# Referência Início: {{ referencia_inicio }}
+# Término Objeto: {{ termino_objeto }}
+# Referência Término: {{ referencia_termino }}
+# Inauguração Objeto: {{ inauguracao_objeto }}
+# Data Recebimento Definitivo: {{ data_recebimento_definitivo }}
+# Visita Preliminar: {{ visita_preliminar }}
+# Visita Final: {{ visita_final }}
+# Unidade Departamento: {{ unidade_departamento }}
+# Analista: {{ analista }}
+# Data Assinatura: {{ data_assinatura }}
+# Data Publicação: {{ data_publicacao }}
+# Início Vigência: {{ inicio_vigencia }}
+# Fim Vigência Atual: {{ fim_vigencia_atual }}
+# Fim Vigência Atual (dias): {{ fim_vigencia_atual_(dias) }}
+# Fim Vigência Original: {{ fim_vigencia_original }}
+# Valor Total Inicial: {{ valor_total_inicial }}
+# Valor Total Atual: {{ valor_total_atual }}
+# Repasse Previsto Inicial: {{ repasse_previsto_inicial }}
+# Repasse Previsto Atual: {{ repasse_previsto_atual }}
+# Contrapartida Inicial: {{ contrapartida_inicial }}
+# Contrapartida Atual: {{ contrapartida_atual }}
+# Valor Referência Repasse: {{ valor_referencia_repasse }}
+# Total Empenhado: {{ total_empenhado }}
+# Valor a Empenhar: {{ valor_a_empenhar }}
+# Total Repassado: {{ total_repassado }}
+# Valor a Repassar: {{ valor_a_repassar }}
+# Total Aprovado Repasse: {{ total_aprovado_repasse }}
+# Saldo Empenho: {{ saldo_empenho }}
+# Saldo Aprovado Repasse: {{ saldo_aprovado_repasse }}
+# Valor Aporte Adicional: {{ valor_aporte_adicional }}
+# Descrição Aporte Adicional: {{ descricao_aporte_adicional }}
+# Ano: {{ ano }}
+# Programa: {{ programa }}
+# Ação Última: {{ acao_ultima }}
+# Municípios Beneficiados: {{ municipios_beneficiados }}
+# Qtd Municípios: {{ qtd_municipios }}
+# População Beneficiada: {{ populacao_beneficiada }}
+# Descrição Benefícios: {{ descricao_beneficios }}
+# Latitude: {{ latitude }}
+# Longitude: {{ longitude }}
+# PI 130 2013: {{ pi_130_2013 }}
+# Prazo Suspensiva Original: {{ prazo_suspensiva_original }}
+# Prazo Suspensiva Vigente: {{ prazo_suspensiva_vigente }}
+# Data Abertura Processo: {{ data_abertura_processo }}
+# Data Apresentação Proposta: {{ data_apresentacao_proposta }}
+# Data Retirada Suspensiva: {{ data_retirada_suspensiva }}
+# Data Início Supervisão: {{ data_inicio_supervisao }}
+# Data Análise PCF: {{ data_analise_pcf }}
+# DOH: {{ doh }}
+# Ativo: {{ ativo }}

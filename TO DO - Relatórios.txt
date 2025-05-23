@@ -1,0 +1,57 @@
+	To Do List - Relatórios Automáticos
+
+
+- ADICIONAR PESQUISA ABSOLUTA
+- PASSAR TERMINAL PARA JANELA OPCIONAL??
+- ADICIONAR CAMPO PARA ALTERAR O NOME DO DOCUMENTO PARA CADA FUNÇÃO DE ADIÇÃO
+- COLOCAR FUNÇÕES PARA ADICIONAR CADA VALOR EM CADA PLACEHOLDER DO DOCUMENTO☑
+- SELECIONAR ARQUIVO (CAMINHO DE ARQUIVO) PARA DOCUMENTO TEMPLATE☑
+- ADICIONAR IF's EM CIMA DOS BUTTON's☑
+- Adicionar Imagens ao arquivo relatório padrão☑
+- Adicionar Label de campos selecionados☑
+- Possibilidade de organização de ordem de campos selecionados??
+- Setar tamanho do cabeçalho e parágrafo??
+- Pré-visualização de arquivo Word?
+- Selecionar tamanho da imagem (passar valor absoluto para valor selecionável por usuário)
+- SETAR CAMPOS NO DOCUMENTO WORD(Processo, UF, Tipo Convenente...) colocar valores correspondentes ao lado dos campos que estarão no arquivo Word padrão (setar valores ao lado de informações que já estão no documento Word)
+
+
+Perguntas:
+- Os relatórios são sempre de apenas uma obra/registro?
+- 
+
+
+-------------------------------------------------------------------------------------------------------------------
+12/05/2025
+-------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+Bom dia Ivani!
+
+Ivani, vc tem algum relatório, daqueles que o Cristian cria manualmente, para eu dar uma olhada? Fiz um programa que automatiza a criação desses relatórios e preciso de um relatório modelo, para ver como ficaria os dados em um arquivo definitivo, e fazer alguns testes.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Cristian, fiz um programa em Python que consegue ler arquivos em tabelas(excel, csv) e selecionar qual informação o usuário quer em um arquivo Word(.docx), consegui colocar imagens também. Fiz um teste com a planilha de Controle de Instrumentos, e consegui pegar os dados da planilha e colocar em um arquivo Word. No momento estou estudando sobre como fazer a formatação dos itens do Relatório (Título, parágrafo, imagem, setar tamanho, fonte etc...), coisas como posicionamento na página, tamanho, etc... Você tem alguma imagem ou documento que serviria como modelo, para eu definir o formato dos itens na página? Para servir de template para os relatórios.

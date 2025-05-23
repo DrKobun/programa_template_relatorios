@@ -1,0 +1,511 @@
+from tkinter import *
+from tkinter import ttk
+from tkinter import filedialog
+import os
+import pandas as pd
+from docx import Document
+from openpyxl import load_workbook
+from docx.shared import Inches
+from docxtpl import DocxTemplate, InlineImage
+
+
+
+
+
+#doc = Document()
+arquivo = load_workbook('OpenPy.xlsx')
+planilha = arquivo.active
+
+
+
+def adicionar_imagem():
+
+    nome_arquivo = entrada_nome_arquivo.get().strip()
+    image_path = filedialog.askopenfilename()
+
+    if not nome_arquivo:
+        nome_arquivo =  "default.docx"
+    else:
+        nome_arquivo += ".docx"
+    
+    try:
+        doc = Document(nome_arquivo)
+        print(f"Abrindo o arquivo existente. {nome_arquivo}")
+    except:
+        print(f"Arquivo '{nome_arquivo}' não encontrado. Criando um novo arquivo")
+        doc = Document()
+
+
+    # Adicionando imagem
+    doc.add_picture(image_path, width=Inches(2), height=Inches(2))
+
+    doc.save(nome_arquivo)
+    print("Imagem adicionada com sucesso!")
+
+def adicionar_cabecalho(variavel):
+    # Get the filename from the Entry widget
+    nome_arquivo = entrada_nome_arquivo.get().strip()
+    
+
+    if not nome_arquivo:  # Handle empty input
+        print("O campo de nome do arquivo está vazio. Usando 'default.docx' como padrão.")
+        nome_arquivo = "default.docx"
+    else:
+        nome_arquivo += ".docx"  # Add the .docx extension
+
+    try:
+        # Try to open the specified Word file
+        doc = Document(nome_arquivo)
+        print(f"Abrindo o arquivo existente: {nome_arquivo}")
+    except Exception as e:
+        # If the file doesn't exist, create a new document
+        print(f"Arquivo '{nome_arquivo}' não encontrado. Criando um novo arquivo.")
+        doc = Document()
+
+    # Add the heading to the document
+    doc.add_heading(variavel, level=1)
+
+    doc.add_section
+
+    doc.save(nome_arquivo)
+    print(f"Cabeçalho adicionado ao arquivo: {nome_arquivo}")
+
+
+
+def adicionar_paragrafo(variavel):
+    # Get the filename from the Entry widget
+    nome_arquivo = entrada_nome_arquivo.get().strip()
+    
+    if not nome_arquivo:  # Handle empty input
+        print("O campo de nome do arquivo está vazio. Usando 'default.docx' como padrão.")
+        nome_arquivo = "default.docx"
+    else:
+        nome_arquivo += ".docx"  # Add the .docx extension
+
+    try:
+        # Try to open the specified Word file
+        doc = Document(nome_arquivo)
+        print(f"Abrindo o arquivo existente: {nome_arquivo}")
+    except Exception as e:
+        # If the file doesn't exist, create a new document
+        print(f"Arquivo '{nome_arquivo}' não encontrado. Criando um novo arquivo.")
+        doc = Document()
+
+    # Add the paragraph to the document
+    doc.add_paragraph(variavel)
+    doc.save(nome_arquivo)
+    print(f"Parágrafo adicionado ao arquivo: {nome_arquivo}")
+
+
+
+def pesquisa():
+    global df, tamanho_lista  # Ensure df and tamanho_lista are accessible
+    search_text = entrada_texto.get().strip()
+
+    if not search_text:
+        print("Campo de pesquisa vazio.")
+        return
+
+    if 'df' in globals():
+        # Filter rows where any cell contains the search text (case-insensitive)
+        filtered_df = df[df.apply(lambda row: row.astype(str).str.contains(search_text, case=False).any(), axis=1)]
+
+        # Update tamanho_lista with the number of filtered rows
+        tamanho_lista = len(filtered_df)
+        resultado_texto.set(f"Resultados encontrados: {tamanho_lista}") # Update the label text
+
+        # Clear the Treeview
+        for col in tree.get_children():
+            tree.delete(col)
+
+        # Insert filtered data into the Treeview
+        for index, row in filtered_df.iterrows():
+            tree.insert("", "end", values=list(row))
+
+        print(f"Exibindo resultados para: {search_text}")
+    else:
+        print("Nenhum arquivo carregado para pesquisa.")
+
+
+def open_new_window():
+    selected_item = tree.focus()  # Get selected item ID
+    if selected_item:
+        values = tree.item(selected_item, 'values')  # Get row data
+
+        # Create new window
+        new_win = Toplevel(root)
+        new_win.title("Detalhes")
+
+        # Get screen dimensions
+        screen_width = root.winfo_screenwidth()
+        screen_height = root.winfo_screenheight()
+
+        # Calculate 1/4 of the screen size
+        window_width = screen_width // 2
+        window_height = screen_height // 2
+
+        # Position the window in the right-top corner
+        x = screen_width - window_width
+        y = 0
+
+        # Set the geometry of the new window
+        new_win.geometry(f"{window_width}x{window_height}+{x}+{y}")
+
+        # Create a frame for the canvas and scrollbar
+        frame = Frame(new_win)
+        frame.pack(fill=BOTH, expand=True)
+
+        # Create a canvas inside the frame
+        canvas = Canvas(frame)
+        canvas.pack(side=LEFT, fill=BOTH, expand=True)
+
+        # Add a scrollbar to the canvas
+        scrollbar = ttk.Scrollbar(frame, orient=VERTICAL, command=canvas.yview)
+        scrollbar.pack(side=RIGHT, fill=Y)
+
+        def _on_mousewheel(event):
+            canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.bind_all("<MouseWheel>", _on_mousewheel)
+
+        # Create another frame inside the canvas for the content
+        content_frame = Frame(canvas)
+        canvas.create_window((0, 0), window=content_frame, anchor='nw')
+
+        column_names = tree["columns"]
+
+        # Add the labels to the content frame
+        for i, val in enumerate(values):
+            column_name = column_names[i]
+
+            # Column name label
+            Label(content_frame, text=column_name, font=('Arial', 10, 'bold')).grid(row=i, column=0, sticky='w', padx=10, pady=5)
+
+            # Selectable value using readonly Entry
+            entry = ttk.Entry(content_frame, font=('Arial', 10), width=30)
+            entry.insert(0, val)
+            entry.config(state='readonly')
+            entry.grid(row=i, column=1, sticky='w', padx=10, pady=5)
+
+
+            # para cada loop de cada coluna, se for igual, mostre o botão
+            # Fazer botão para cada linha
+                                #column_names[i]
+            if column_names[i] == "Processo":
+                Button(content_frame,
+                    text="Adicionar ao relatório",
+                    command=lambda cn=column_name,
+                    v=val: adicionar_processo(v)
+                    ).grid(row=i, column=2, padx=10, pady=5)
+
+            elif column_names[i] == "UF":
+
+                Button(content_frame,
+                    text="Adicionar ao relatório",
+                    command=lambda cn=column_name,
+                    v=val: adicionar_uf(v)
+                    ).grid(row=i, column=2, padx=10, pady=5)
+
+        # Update scrollregion when contents are added
+        content_frame.update_idletasks()
+        canvas.config(scrollregion=canvas.bbox("all"))
+
+        Button(content_frame,
+                    text="Salvar Relatório",
+                    command=lambda cn=column_name,
+                    v=val: print(f"{cn}: {v}")
+                    ).grid(row=i, column=2, padx=10, pady=5)
+    else:
+        print("Nenhuma linha selecionada.")
+
+
+
+
+
+def adicionar_processo(v):
+    global processo
+    processo = v
+    nome_documento = 'teste_funcao.docx'
+
+    caminho_template = 'C:\\Users\\walyson.ferreira\\Desktop\\openpy\\template\\template.docx'
+
+    
+    doc = DocxTemplate(caminho_template)
+    # context = {
+    #     'processo': processo,
+    # }
+    if 'context' not in globals():
+        global context
+        context = {}
+
+    context['processo'] = processo
+    doc.render(context)
+    doc.save(nome_documento)
+
+def adicionar_uf(v):
+    global uf
+    uf = v
+    nome_documento = 'teste_funcao.docx'
+
+    caminho_template = 'C:\\Users\\walyson.ferreira\\Desktop\\openpy\\template\\template.docx'
+
+    doc = DocxTemplate(caminho_template)
+
+    if 'context' not in globals():
+        global context
+        context = {}
+
+    context['uf'] = uf
+
+    doc.render(context)
+    doc.save(nome_documento)
+
+
+
+
+def generate_document(v):
+    # caminho_imagem = filedialog.askopenfilename()
+    # nome_projeto
+    # nome_projeto = v
+    # processo = v
+    # uf = v
+    # tipo_convenente = v
+    # titulo_objeto = v
+    # nome_documento = v + ".docx"
+
+    caminho_template = 'C:\\Users\\walyson.ferreira\\Desktop\\openpy\\template\\template.docx'
+    # caminho_imagem = 'C:\\Users\\walyson.ferreira\\Downloads\\LOGO-MIDR-removebg-preview.png'
+    
+    doc = DocxTemplate(caminho_template)
+    
+    # Update the placeholder code
+    # width = float(entry_width.get())  # Get the width from the user input
+    # height = float(entry_height.get())  # Get the height from the user input
+    # imagem = InlineImage(doc, caminho_imagem, width=Mm(width), height=Mm(height))  # Set width and height in millimeters
+    
+    # context = {
+    #     'nome_projeto': nome_projeto,
+    #     'processo': processo,
+    #     'uf': uf,
+    #     'tipo_convenente': tipo_convenente,
+    #     'titulo_objeto': titulo_objeto,
+    #     'imagem': imagem
+    # }
+    
+    doc.render(context)
+    doc.save(nome_documento)
+    root.destroy()
+
+
+
+# def open_new_window():
+#     selected_item = tree.focus()  # Get selected item ID
+#     if selected_item:
+#         values = tree.item(selected_item, 'values')  # Get row data
+
+#         # Create new window
+#         new_win = Toplevel(root)
+#         new_win.title("Detalhes")
+
+#         # Get screen dimensions
+#         screen_width = root.winfo_screenwidth()
+#         screen_height = root.winfo_screenheight()
+
+#         # Calculate 1/4 of the screen size
+#         window_width = screen_width // 2
+#         window_height = screen_height // 2
+
+#         # Position the window in the right-top corner
+#         x = screen_width - window_width
+#         y = 0
+
+#         # Set the geometry of the new window
+#         new_win.geometry(f"{window_width}x{window_height}+{x}+{y}")
+
+#         # Create a frame for the canvas and scrollbar
+#         frame = Frame(new_win)
+#         frame.pack(fill=BOTH, expand=True)
+
+#         # Create a canvas inside the frame
+#         canvas = Canvas(frame)
+#         canvas.pack(side=LEFT, fill=BOTH, expand=True)
+
+#         # Add a scrollbar to the canvas
+#         scrollbar = ttk.Scrollbar(frame, orient=VERTICAL, command=canvas.yview)
+#         scrollbar.pack(side=RIGHT, fill=Y)
+
+#         def _on_mousewheel(event):
+#             canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+#         canvas.configure(yscrollcommand=scrollbar.set)
+#         canvas.bind_all("<MouseWheel>", _on_mousewheel)
+
+#         # Create another frame inside the canvas for the content
+#         content_frame = Frame(canvas)
+#         canvas.create_window((0, 0), window=content_frame, anchor='nw')
+
+#         column_names = tree["columns"]
+
+#         # Add the labels to the content frame
+#         for i, val in enumerate(values):
+#             column_name = column_names[i]
+
+#             # Column name label
+#             Label(content_frame, text=column_name, font=('Arial', 10, 'bold')).grid(row=i, column=0, sticky='w', padx=10, pady=5)
+
+#             # Selectable value using readonly Entry
+#             entry = ttk.Entry(content_frame, font=('Arial', 10), width=30)
+#             entry.insert(0, val)
+#             entry.config(state='readonly')
+#             entry.grid(row=i, column=1, sticky='w', padx=10, pady=5)
+
+#             Button(content_frame,
+#                    text="Adicionar ao relatório",
+#                    command=lambda cn=column_name,
+#                    v=val: print(f"{cn}: {v}")
+#                    ).grid(row=i, column=2, padx=10, pady=5)
+
+#             Button(content_frame,
+#                    text="Cabeçalho",
+#                    command=lambda v=val: adicionar_cabecalho(v)
+#                    ).grid(row=i, column=3, padx=10, pady=5)
+
+#             Button(content_frame,
+#                    text="Parágrafo",
+#                    command=lambda v=val: adicionar_paragrafo(v)).grid(row=i, column=4, padx=10, pady=5)
+
+#         # Update scrollregion when contents are added
+#         content_frame.update_idletasks()
+#         canvas.config(scrollregion=canvas.bbox("all"))
+
+#     else:
+#         print("Nenhuma linha selecionada.")
+
+
+
+
+# carregar arquivo
+def load_file():
+    global df
+    caminho_arquivo = filedialog.askopenfilename()
+
+    # Caso o arquivo seja carregado, verificar se é um arquivo de planilha
+    if caminho_arquivo:
+        nome_arquivo, extensao_arquivo = os.path.splitext(caminho_arquivo)
+
+        if extensao_arquivo == '.csv':
+            try:
+                df = pd.read_csv(caminho_arquivo, encoding='utf-8', sep=';')
+                print("Arquivo de planilha carregado")
+
+            except UnicodeDecodeError:
+                df = pd.read_csv(caminho_arquivo, encoding='ISO-8859-1', sep=';')
+                print("Arquivo de planilha carregado")
+
+        elif extensao_arquivo in ['.xlsx', '.xls']:
+            df = pd.read_excel(caminho_arquivo)
+            print("Arquivo de planilha carregado")
+
+        else:
+            print("tipo de arquivo não permitido")
+            return
+
+        # limpar dados do treeview
+        for col in tree.get_children():
+            tree.delete(col)
+        
+        # definir colunas do treeview
+        
+        tree["columns"] = list(df.columns)
+        tree["show"] = "headings" # oculta a primeira coluna vazia
+
+        # configura os títulos das colunas
+        for coluna in df.columns:
+            tree.heading (coluna, text=coluna)
+            tree.column(coluna, anchor='center', minwidth=100)
+
+        
+        # insere os dados no Treeview
+        for index, row in df.iterrows():
+            tree.insert("", "end", values=list(row))
+
+
+# centralizar window
+def center_window(width=300, height=200):
+    # Get screen width and height
+    screen_width = root.winfo_screenwidth() * 2
+    screen_height = root.winfo_screenheight()
+
+    # Set the window width to a fixed size (e.g., 1/4 of the screen width)
+    window_width = screen_width // 4
+    window_height = screen_height  # Full height of the screen
+
+    # Position the window on the left side of the screen
+    x = 0  # Left edge
+    y = 0  # Top edge
+
+    # Set the geometry of the root window
+    root.geometry(f"{window_width}x{window_height}+{x}+{y}")
+
+
+root = Tk()
+root.title("Planilha")
+center_window(500, 400)
+root.resizable(True, True)
+
+root.grid_rowconfigure(2, weight=1)
+root.grid_columnconfigure(0, weight=1)
+# Create a StringVar to hold the label text
+resultado_texto = StringVar()
+resultado_texto.set(f"Resultados encontrados: {0}")
+# Initialize with 0
+
+# Use grid for all root widgets
+entrada_texto = ttk.Entry(root, width=20) 
+entrada_texto.grid(row=0, column=0, padx=5, pady=10, sticky="w")
+
+pesquisa_btn = ttk.Button(root, text="Pesquisar", command=pesquisa)
+pesquisa_btn.grid(row=0, column=1, padx=5, pady=10, sticky="w")
+
+detalhes_btn = ttk.Button(root, text="Detalhes", command=open_new_window)
+detalhes_btn.grid(row=0, column=2, padx=5, pady=10, sticky="w")
+
+carregar_btn = ttk.Button(root, text="Carregar Arquivo", command=load_file)
+carregar_btn.grid(row=0, column=3, padx=5, pady=10, sticky="w")
+
+imagem_btn = ttk.Button(root, text="Carregar Imagem", command=adicionar_imagem)
+imagem_btn.grid(row=0, column=4, padx=5, pady=10, sticky="w")
+
+entrada_nome_arquivo = ttk.Entry(root, width=15)
+entrada_nome_arquivo.grid(row=0, column=5, padx=5, pady=10, sticky="w")
+
+# "Resultados encontrados" label in row=1
+filtro_numero = ttk.Label(root, textvariable=resultado_texto)
+filtro_numero.grid(row=1, column=0, columnspan=6, padx=5, pady=0 ,sticky="w")
+
+
+# Use pack/grid for frame as before
+frame = ttk.Frame(root)
+frame.grid(row=2, column=0, columnspan=7, sticky="nsew", padx=10, pady=10)
+
+# Scrollbars
+scroll_y = ttk.Scrollbar(frame, orient="vertical")
+scroll_x = ttk.Scrollbar(frame, orient="horizontal")
+
+tree = ttk.Treeview(frame, yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
+
+# Use grid instead of place
+frame.columnconfigure(0, weight=1)
+frame.rowconfigure(0, weight=1)
+
+tree.grid(row=0, column=0, sticky="nsew")
+scroll_y.grid(row=0, column=1, sticky="ns")
+scroll_x.grid(row=1, column=0, sticky="ew")
+
+scroll_y.config(command=tree.yview)
+scroll_x.config(command=tree.xview)
+
+
+
+root.mainloop()
